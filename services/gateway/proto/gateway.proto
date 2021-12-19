@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package gateway;
+
+option go_package = "github.com/Nulandmori/micorservices-pattern/services/gateway/proto";
+
+import "google/api/annotations.proto";
+import "services/authority/proto/authority.proto";
+
+service GatewayService {
+  rpc Signup(authority.SignupRequest) returns (authority.SignupResponse){
+    option (google.api.http) = {
+      post: "/auth/signup"
+      body: "*"
+    };
+  }
+}

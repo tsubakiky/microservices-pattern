@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package authority;
+
+option go_package = "github.com/Nulandmori/micorservices-pattern/services/authority/proto";
+
+import "services/customer/proto/customer.proto";
+
+service AuthorityService {
+  rpc Signup(SignupRequest) returns (SignupResponse);
+}
+
+message SignupRequest {
+  string name = 1;
+}
+
+message SignupResponse {
+  customer.Customer customer = 1;
+}
+
