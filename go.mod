@@ -22,8 +22,6 @@ require (
 
 require (
 	github.com/golang/glog v1.0.0 // indirect
-	github.com/golang/protobuf v1.5.2
-	github.com/grpc-ecosystem/grpc-gateway v1.16.0
 	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0
@@ -31,4 +29,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-require github.com/ghodss/yaml v1.0.0 // indirect
+require github.com/golang/protobuf v1.5.2 // indirect
