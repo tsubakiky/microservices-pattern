@@ -10,5 +10,3 @@ COPY . .
 RUN go build -o /usr/bin/customer ./services/customer
 
 CMD ["/usr/bin/customer"]
-
-
