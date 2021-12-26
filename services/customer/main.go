@@ -19,7 +19,6 @@ func main() {
 func run(ctx context.Context) int {
 	port := 8080
 
-	fmt.Println("Run!!")
 	ctx, stop := signal.NotifyContext(ctx, unix.SIGTERM, unix.SIGINT)
 	defer stop()
 
