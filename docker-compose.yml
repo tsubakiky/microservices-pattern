@@ -12,6 +12,5 @@ services:
     ports:
       - "127.0.0.1:50051:8080"
     volumes:
-      - "./reflex.conf:/work/reflex.conf"
+      - "./services/customer/reflex.conf:/work/reflex.conf"
       - ".:/work"
-    entrypoint: /usr/bin/customer -c
