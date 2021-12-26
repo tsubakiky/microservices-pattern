@@ -1,4 +1,9 @@
 version: '3.2'
+
+networks:
+  microservices-pattern_default:
+    external: true
+
 services:
   customer:
     build:
@@ -14,3 +19,23 @@ services:
     volumes:
       - "./services/customer/reflex.conf:/work/reflex.conf"
       - ".:/work"
+    container_name: customer_app
+    networks:
+      - microservices-pattern_default
+  authority:
+    build:
+      context: .
+      dockerfile: ./services/authority/Dockerfile
+      target: builder
+    command: >
+      ash -c
+      "GO111MODULE=off go get github.com/cespare/reflex &&
+      reflex -c /work/reflex.conf"
+    ports:
+      - "127.0.0.1:50052:8080"
+    volumes:
+      - "./services/authority/reflex.conf:/work/reflex.conf"
+      - ".:/work"
+    container_name: authority_app
+    networks:
+      - microservices-pattern_default

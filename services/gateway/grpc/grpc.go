@@ -18,7 +18,7 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
 
-	aconn, err := grpc.DialContext(ctx, "localhost:9000", opts...)
+	aconn, err := grpc.DialContext(ctx, "127.0.0.1:50052", opts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial authority grpc server: %w", err)
 	}

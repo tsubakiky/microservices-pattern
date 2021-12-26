@@ -17,7 +17,7 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
-	conn, err := grpc.DialContext(ctx, "127.0.0.1:50051", opts...)
+	conn, err := grpc.DialContext(ctx, "customer_app:8080", opts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial grpc server: %w", err)
 	}

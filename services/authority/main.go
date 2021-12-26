@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strconv"
 
 	"github.com/Nulandmori/micorservices-pattern/pkg/logger"
 	"github.com/Nulandmori/micorservices-pattern/services/authority/grpc"
@@ -16,6 +17,8 @@ func main() {
 }
 
 func run(ctx context.Context) int {
+	port := 8080
+
 	ctx, stop := signal.NotifyContext(ctx, unix.SIGTERM, unix.SIGINT)
 	defer stop()
 
@@ -30,9 +33,17 @@ func run(ctx context.Context) int {
 	}
 	alogger := l.WithName("authority")
 
+	if len(os.Getenv("PORT")) > 0 {
+		p, err := strconv.Atoi(os.Getenv("PORT"))
+		if err != nil {
+			fmt.Printf("cannot convert %q to number!\n", os.Getenv("PORT"))
+		}
+		port = p
+	}
+
 	errCh := make(chan error, 1)
 	go func() {
-		errCh <- grpc.RunServer(ctx, 9000, alogger.WithName("grpc"))
+		errCh <- grpc.RunServer(ctx, port, alogger.WithName("grpc"))
 	}()
 
 	select {
