@@ -26,7 +26,6 @@ func run(ctx context.Context) int {
 	if err != nil {
 		_, ferr := fmt.Fprintf(os.Stderr, "failed to create logger: %s", err)
 		if ferr != nil {
-			// Unhandleable, something went wrong...
 			panic(fmt.Sprintf("failed to write log:`%s` original error is:`%s`", ferr, err))
 		}
 		return 1
