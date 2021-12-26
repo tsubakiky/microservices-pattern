@@ -23,7 +23,7 @@ func (s *server) GetCustomer(ctx context.Context, req *proto.GetCustomerRequest)
 }
 
 func (s *server) CreateCustomer(ctx context.Context, req *proto.CreateCustomerRequest) (*proto.CreateCustomerResponse, error) {
-	fmt.Println("Create Customer!!")
+	fmt.Println("Create Customer!")
 	return &proto.CreateCustomerResponse{
 		Customer: &proto.Customer{
 			Id:   "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
