@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  customer:
+    build:
+      context: .
+      dockerfile: ./services/customer/Dockerfile
+      target: builder
+    command: >
+      ash -c
+      "GO111MODULE=off go get github.com/cespare/reflex &&
+      reflex -c /work/reflex.conf"
+    ports:
+      - "127.0.0.1:50051:8080"
+    volumes:
+      - "./reflex.conf:/work/reflex.conf"
+      - ".:/work"
+    entrypoint: /usr/bin/customer -c
