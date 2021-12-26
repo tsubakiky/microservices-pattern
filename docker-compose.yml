@@ -39,3 +39,20 @@ services:
     container_name: authority_app
     networks:
       - microservices-pattern_default
+  gateway:
+    build:
+      context: .
+      dockerfile: ./services/gateway/Dockerfile
+      target: builder
+    command: >
+      ash -c
+      "GO111MODULE=off go get github.com/cespare/reflex &&
+      reflex -c /work/reflex.conf"
+    ports:
+      - "127.0.0.1:50053:8080"
+    volumes:
+      - "./services/gateway/reflex.conf:/work/reflex.conf"
+      - ".:/work"
+    container_name: gateway_app
+    networks:
+      - microservices-pattern_default
