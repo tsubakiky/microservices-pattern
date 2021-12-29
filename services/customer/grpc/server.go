@@ -13,6 +13,16 @@ type server struct {
 	proto.UnimplementedCustomerServiceServer
 }
 
+func (s *server) CreateCustomer(ctx context.Context, req *proto.CreateCustomerRequest) (*proto.CreateCustomerResponse, error) {
+	fmt.Println("Create Customer!")
+	return &proto.CreateCustomerResponse{
+		Customer: &proto.Customer{
+			Id:   "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
+			Name: "goldie",
+		},
+	}, nil
+}
+
 func (s *server) GetCustomer(ctx context.Context, req *proto.GetCustomerRequest) (*proto.GetCustomerResponse, error) {
 	return &proto.GetCustomerResponse{
 		Customer: &proto.Customer{
@@ -22,9 +32,8 @@ func (s *server) GetCustomer(ctx context.Context, req *proto.GetCustomerRequest)
 	}, nil
 }
 
-func (s *server) CreateCustomer(ctx context.Context, req *proto.CreateCustomerRequest) (*proto.CreateCustomerResponse, error) {
-	fmt.Println("Create Customer!")
-	return &proto.CreateCustomerResponse{
+func (s *server) GetCustomerByName(ctx context.Context, req *proto.GetCustomerByNameRequest) (*proto.GetCustomerByNameResponse, error) {
+	return &proto.GetCustomerByNameResponse{
 		Customer: &proto.Customer{
 			Id:   "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
 			Name: "goldie",

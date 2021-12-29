@@ -20,3 +20,7 @@ type server struct {
 func (s *server) Signup(ctx context.Context, req *authority.SignupRequest) (*authority.SignupResponse, error) {
 	return s.authorityClient.Signup(ctx, req)
 }
+
+func (s *server) Signin(ctx context.Context, req *authority.SigninRequest) (*authority.SigninResponse, error) {
+	return s.authorityClient.Signin(ctx, req)
+}

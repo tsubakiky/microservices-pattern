@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthorityServiceClient interface {
 	Signup(ctx context.Context, in *SignupRequest, opts ...grpc.CallOption) (*SignupResponse, error)
+	Signin(ctx context.Context, in *SigninRequest, opts ...grpc.CallOption) (*SigninResponse, error)
 }
 
 type authorityServiceClient struct {
@@ -38,11 +39,21 @@ func (c *authorityServiceClient) Signup(ctx context.Context, in *SignupRequest, 
 	return out, nil
 }
 
+func (c *authorityServiceClient) Signin(ctx context.Context, in *SigninRequest, opts ...grpc.CallOption) (*SigninResponse, error) {
+	out := new(SigninResponse)
+	err := c.cc.Invoke(ctx, "/authority.AuthorityService/Signin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthorityServiceServer is the server API for AuthorityService service.
 // All implementations must embed UnimplementedAuthorityServiceServer
 // for forward compatibility
 type AuthorityServiceServer interface {
 	Signup(context.Context, *SignupRequest) (*SignupResponse, error)
+	Signin(context.Context, *SigninRequest) (*SigninResponse, error)
 	mustEmbedUnimplementedAuthorityServiceServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedAuthorityServiceServer struct {
 
 func (UnimplementedAuthorityServiceServer) Signup(context.Context, *SignupRequest) (*SignupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Signup not implemented")
+}
+func (UnimplementedAuthorityServiceServer) Signin(context.Context, *SigninRequest) (*SigninResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
 }
 func (UnimplementedAuthorityServiceServer) mustEmbedUnimplementedAuthorityServiceServer() {}
 
@@ -84,6 +98,24 @@ func _AuthorityService_Signup_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthorityService_Signin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SigninRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorityServiceServer).Signin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/authority.AuthorityService/Signin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorityServiceServer).Signin(ctx, req.(*SigninRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthorityService_ServiceDesc is the grpc.ServiceDesc for AuthorityService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +126,10 @@ var AuthorityService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Signup",
 			Handler:    _AuthorityService_Signup_Handler,
+		},
+		{
+			MethodName: "Signin",
+			Handler:    _AuthorityService_Signin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

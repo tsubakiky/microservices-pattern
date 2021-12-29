@@ -40,6 +40,18 @@ func (s *server) Signup(ctx context.Context, req *proto.SignupRequest) (*proto.S
 	}, nil
 }
 
+func (s *server) Signin(ctx context.Context, req *proto.SigninRequest) (*proto.SigninResponse, error) {
+	_, err := s.customerClient.GetCustomerByName(ctx, &customer.GetCustomerByNameRequest{Name: req.Name})
+	if err != nil {
+		s.log(ctx).Info(fmt.Sprintf("failed to authenticate the customer: %s", err))
+		return nil, status.Error(codes.Unauthenticated, "unauthenticated")
+	}
+	// TODO: create accessToken
+	return &proto.SigninResponse{
+		AccessToken: "test",
+	}, nil
+}
+
 func (s *server) log(ctx context.Context) logr.Logger {
 	reqid := grpccontext.GetRequestID(ctx)
 

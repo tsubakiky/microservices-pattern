@@ -8,6 +8,7 @@ option go_package = "github.com/Nulandmori/micorservices-pattern/services/custom
 service CustomerService {
     rpc CreateCustomer(CreateCustomerRequest) returns (CreateCustomerResponse);
     rpc GetCustomer(GetCustomerRequest) returns (GetCustomerResponse);
+    rpc GetCustomerByName(GetCustomerByNameRequest) returns (GetCustomerByNameResponse);
 }
 
   message CreateCustomerRequest {
@@ -23,6 +24,14 @@ service CustomerService {
   }
 
   message GetCustomerResponse {
+    Customer customer = 1;
+  }
+
+  message GetCustomerByNameRequest {
+    string name = 1;
+  }
+
+  message GetCustomerByNameResponse {
     Customer customer = 1;
   }
 

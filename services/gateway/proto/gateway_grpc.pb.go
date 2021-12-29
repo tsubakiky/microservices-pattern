@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GatewayServiceClient interface {
 	Signup(ctx context.Context, in *proto.SignupRequest, opts ...grpc.CallOption) (*proto.SignupResponse, error)
+	Signin(ctx context.Context, in *proto.SigninRequest, opts ...grpc.CallOption) (*proto.SigninResponse, error)
 }
 
 type gatewayServiceClient struct {
@@ -39,11 +40,21 @@ func (c *gatewayServiceClient) Signup(ctx context.Context, in *proto.SignupReque
 	return out, nil
 }
 
+func (c *gatewayServiceClient) Signin(ctx context.Context, in *proto.SigninRequest, opts ...grpc.CallOption) (*proto.SigninResponse, error) {
+	out := new(proto.SigninResponse)
+	err := c.cc.Invoke(ctx, "/gateway.GatewayService/Signin", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatewayServiceServer is the server API for GatewayService service.
 // All implementations must embed UnimplementedGatewayServiceServer
 // for forward compatibility
 type GatewayServiceServer interface {
 	Signup(context.Context, *proto.SignupRequest) (*proto.SignupResponse, error)
+	Signin(context.Context, *proto.SigninRequest) (*proto.SigninResponse, error)
 	mustEmbedUnimplementedGatewayServiceServer()
 }
 
@@ -53,6 +64,9 @@ type UnimplementedGatewayServiceServer struct {
 
 func (UnimplementedGatewayServiceServer) Signup(context.Context, *proto.SignupRequest) (*proto.SignupResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Signup not implemented")
+}
+func (UnimplementedGatewayServiceServer) Signin(context.Context, *proto.SigninRequest) (*proto.SigninResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
 }
 func (UnimplementedGatewayServiceServer) mustEmbedUnimplementedGatewayServiceServer() {}
 
@@ -85,6 +99,24 @@ func _GatewayService_Signup_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatewayService_Signin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(proto.SigninRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServiceServer).Signin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.GatewayService/Signin",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServiceServer).Signin(ctx, req.(*proto.SigninRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatewayService_ServiceDesc is the grpc.ServiceDesc for GatewayService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -95,6 +127,10 @@ var GatewayService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Signup",
 			Handler:    _GatewayService_Signup_Handler,
+		},
+		{
+			MethodName: "Signin",
+			Handler:    _GatewayService_Signin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

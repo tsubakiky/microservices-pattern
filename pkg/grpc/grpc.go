@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/interceptor"
 	"github.com/go-logr/logr"
+	middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"google.golang.org/grpc"
 	channelz "google.golang.org/grpc/channelz/service"
 	"google.golang.org/grpc/reflection"
@@ -17,7 +19,13 @@ type Server struct {
 }
 
 func NewServer(port int, logger logr.Logger, register func(server *grpc.Server)) *Server {
-	opts := []grpc.ServerOption{}
+	interceptors := []grpc.UnaryServerInterceptor{
+		interceptor.NewRequestLogger(logger.WithName("request")),
+	}
+
+	opts := []grpc.ServerOption{
+		middleware.WithUnaryServerChain(interceptors...),
+	}
 
 	server := grpc.NewServer(opts...)
 

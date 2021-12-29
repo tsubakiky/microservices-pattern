@@ -8,6 +8,7 @@ import "services/customer/proto/customer.proto";
 
 service AuthorityService {
   rpc Signup(SignupRequest) returns (SignupResponse);
+  rpc Signin(SigninRequest) returns (SigninResponse);
 }
 
 message SignupRequest {
@@ -16,5 +17,13 @@ message SignupRequest {
 
 message SignupResponse {
   customer.Customer customer = 1;
+}
+
+message SigninRequest {
+  string name = 1;
+}
+
+message SigninResponse {
+  string access_token = 1;
 }
 

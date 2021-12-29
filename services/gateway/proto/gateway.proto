@@ -14,4 +14,11 @@ service GatewayService {
       body: "*"
     };
   }
+
+  rpc Signin(authority.SigninRequest) returns (authority.SigninResponse){
+    option (google.api.http) = {
+      post: "/auth/signin"
+      body: "*"
+    };
+  }
 }
