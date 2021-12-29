@@ -21,15 +21,11 @@ require (
 )
 
 require (
-	github.com/golang/glog v1.0.0 // indirect
-	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
-	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0
-	gopkg.in/yaml.v2 v2.4.0 // indirect
-	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
 require (
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
+	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f // indirect
 )
