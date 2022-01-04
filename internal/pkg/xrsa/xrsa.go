@@ -9,15 +9,15 @@ import (
 	"io/ioutil"
 )
 
-func GenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey) {
+func GenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey, error) {
 	// This method requires a random number of bits.
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		fmt.Println("Error: ", err)
+		return nil, nil, fmt.Errorf("failed to generate key pair: %v", err)
 	}
 
 	// The public key is part of the PrivateKey struct
-	return privateKey, &privateKey.PublicKey
+	return privateKey, &privateKey.PublicKey, nil
 }
 
 // Export public key as a string in PEM format
