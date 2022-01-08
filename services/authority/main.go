@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
-	"strconv"
 
+	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	"github.com/Nulandmori/micorservices-pattern/pkg/logger"
 	"github.com/Nulandmori/micorservices-pattern/services/authority/grpc"
 	"golang.org/x/sys/unix"
@@ -17,7 +17,8 @@ func main() {
 }
 
 func run(ctx context.Context) int {
-	port := 8080
+	defaultPort := 8080
+	port := env.GetPort(defaultPort)
 
 	ctx, stop := signal.NotifyContext(ctx, unix.SIGTERM, unix.SIGINT)
 	defer stop()
@@ -31,14 +32,6 @@ func run(ctx context.Context) int {
 		return 1
 	}
 	alogger := l.WithName("authority")
-
-	if len(os.Getenv("PORT")) > 0 {
-		p, err := strconv.Atoi(os.Getenv("PORT"))
-		if err != nil {
-			fmt.Printf("cannot convert %q to number!\n", os.Getenv("PORT"))
-		}
-		port = p
-	}
 
 	errCh := make(chan error, 1)
 	go func() {

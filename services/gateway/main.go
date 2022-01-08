@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"strconv"
 
+	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	"github.com/Nulandmori/micorservices-pattern/pkg/logger"
 	"github.com/Nulandmori/micorservices-pattern/pkg/run"
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/grpc"
@@ -17,8 +17,9 @@ func main() {
 }
 
 func server(ctx context.Context) int {
-	httpPort := 8080
 	grpcPort := 9090
+	defaultPort := 8080
+	httpPort := env.GetPort(defaultPort)
 
 	l, err := logger.New()
 	if err != nil {
@@ -29,14 +30,6 @@ func server(ctx context.Context) int {
 		return 1
 	}
 	glogger := l.WithName("gateway")
-
-	if len(os.Getenv("PORT")) > 0 {
-		p, err := strconv.Atoi(os.Getenv("PORT"))
-		if err != nil {
-			fmt.Printf("cannot convert %q to number!\n", os.Getenv("PORT"))
-		}
-		httpPort = p
-	}
 
 	grpcErrCh := make(chan error, 1)
 	go func() {

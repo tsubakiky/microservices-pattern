@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
 	"github.com/Nulandmori/micorservices-pattern/services/authority/proto"
 	customer "github.com/Nulandmori/micorservices-pattern/services/customer/proto"
@@ -17,7 +18,8 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
-	conn, err := grpc.DialContext(ctx, "customer_app:8080", opts...)
+
+	conn, err := grpc.DialContext(ctx, env.GetEnv("CUSTOMER_SERVICE_ADDR", "customer_app:8080"), opts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial customer grpc server: %w", err)
 	}
