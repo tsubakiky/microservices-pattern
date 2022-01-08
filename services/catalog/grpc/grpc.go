@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
-	"github.com/Nulandmori/micorservices-pattern/services/authority/proto"
-	customer "github.com/Nulandmori/micorservices-pattern/services/customer/proto"
+	"github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
+	item "github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
 	"google.golang.org/grpc"
 )
@@ -17,18 +17,17 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
-	conn, err := grpc.DialContext(ctx, "customer_app:8080", opts...)
+	conn, err := grpc.DialContext(ctx, "item_app:8080", opts...)
 	if err != nil {
-		return fmt.Errorf("failed to dial customer grpc server: %w", err)
+		return fmt.Errorf("failed to dial item grpc server: %w", err)
 	}
 
-	customerClient := customer.NewCustomerServiceClient(conn)
+	itemClient := item.NewItemServiceClient(conn)
 
 	svc := &server{
-		customerClient: customerClient,
-		logger:         logger.WithName("server"),
+		itemClient: itemClient,
 	}
 	return pkggrpc.NewServer(port, logger, func(s *grpc.Server) {
-		proto.RegisterAuthorityServiceServer(s, svc)
+		proto.RegisterCatalogServiceServer(s, svc)
 	}).Start(ctx)
 }

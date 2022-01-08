@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package item;
+
+option go_package = "github.com/Nulandmori/micorservices-pattern/services/item/proto";
+
+
+service ItemService {
+    rpc CreateItem(CreateItemRequest) returns (CreateItemResponse);
+}
+
+message CreateItemRequest {
+    string customer_id = 1;
+    string title = 2;
+    int64 price = 3;
+}
+
+message CreateItemResponse {
+    Item item = 1;
+}
+
+message Item {
+    string id = 1;
+    string customer_id = 2;
+    string title = 3;
+    int64 price = 4;
+}

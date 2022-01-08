@@ -5,6 +5,7 @@ package proto
 import (
 	context "context"
 	proto "github.com/Nulandmori/micorservices-pattern/services/authority/proto"
+	proto1 "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 type GatewayServiceClient interface {
 	Signup(ctx context.Context, in *proto.SignupRequest, opts ...grpc.CallOption) (*proto.SignupResponse, error)
 	Signin(ctx context.Context, in *proto.SigninRequest, opts ...grpc.CallOption) (*proto.SigninResponse, error)
+	CreateItem(ctx context.Context, in *proto1.CreateItemRequest, opts ...grpc.CallOption) (*proto1.CreateItemResponse, error)
 }
 
 type gatewayServiceClient struct {
@@ -49,12 +51,22 @@ func (c *gatewayServiceClient) Signin(ctx context.Context, in *proto.SigninReque
 	return out, nil
 }
 
+func (c *gatewayServiceClient) CreateItem(ctx context.Context, in *proto1.CreateItemRequest, opts ...grpc.CallOption) (*proto1.CreateItemResponse, error) {
+	out := new(proto1.CreateItemResponse)
+	err := c.cc.Invoke(ctx, "/gateway.GatewayService/CreateItem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatewayServiceServer is the server API for GatewayService service.
 // All implementations must embed UnimplementedGatewayServiceServer
 // for forward compatibility
 type GatewayServiceServer interface {
 	Signup(context.Context, *proto.SignupRequest) (*proto.SignupResponse, error)
 	Signin(context.Context, *proto.SigninRequest) (*proto.SigninResponse, error)
+	CreateItem(context.Context, *proto1.CreateItemRequest) (*proto1.CreateItemResponse, error)
 	mustEmbedUnimplementedGatewayServiceServer()
 }
 
@@ -67,6 +79,9 @@ func (UnimplementedGatewayServiceServer) Signup(context.Context, *proto.SignupRe
 }
 func (UnimplementedGatewayServiceServer) Signin(context.Context, *proto.SigninRequest) (*proto.SigninResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Signin not implemented")
+}
+func (UnimplementedGatewayServiceServer) CreateItem(context.Context, *proto1.CreateItemRequest) (*proto1.CreateItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateItem not implemented")
 }
 func (UnimplementedGatewayServiceServer) mustEmbedUnimplementedGatewayServiceServer() {}
 
@@ -117,6 +132,24 @@ func _GatewayService_Signin_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatewayService_CreateItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(proto1.CreateItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServiceServer).CreateItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.GatewayService/CreateItem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServiceServer).CreateItem(ctx, req.(*proto1.CreateItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatewayService_ServiceDesc is the grpc.ServiceDesc for GatewayService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -131,6 +164,10 @@ var GatewayService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Signin",
 			Handler:    _GatewayService_Signin_Handler,
+		},
+		{
+			MethodName: "CreateItem",
+			Handler:    _GatewayService_CreateItem_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -9,10 +9,24 @@ import (
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func RunServer(ctx context.Context, port int, grpcPort int) error {
-	mux := runtime.NewServeMux()
+	// https://grpc-ecosystem.github.io/grpc-gateway/docs/mapping/customizing_your_gateway/
+	mux := runtime.NewServeMux(
+		runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.HTTPBodyMarshaler{
+			Marshaler: &runtime.JSONPb{
+				MarshalOptions: protojson.MarshalOptions{
+					UseProtoNames:   true,
+					EmitUnpopulated: false,
+				},
+				UnmarshalOptions: protojson.UnmarshalOptions{
+					DiscardUnknown: true,
+				},
+			},
+		}),
+	)
 
 	opts := []grpc.DialOption{
 		grpc.WithInsecure(),

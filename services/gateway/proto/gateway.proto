@@ -6,6 +6,7 @@ option go_package = "github.com/Nulandmori/micorservices-pattern/services/gatewa
 
 import "google/api/annotations.proto";
 import "services/authority/proto/authority.proto";
+import "services/catalog/proto/catalog.proto";
 
 service GatewayService {
   rpc Signup(authority.SignupRequest) returns (authority.SignupResponse){
@@ -18,6 +19,13 @@ service GatewayService {
   rpc Signin(authority.SigninRequest) returns (authority.SigninResponse){
     option (google.api.http) = {
       post: "/auth/signin"
+      body: "*"
+    };
+  }
+
+  rpc CreateItem(catalog.CreateItemRequest) returns (catalog.CreateItemResponse){
+    option (google.api.http) = {
+      post: "/catalog/items"
       body: "*"
     };
   }

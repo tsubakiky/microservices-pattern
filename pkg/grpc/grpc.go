@@ -8,10 +8,15 @@ import (
 	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/interceptor"
 	"github.com/go-logr/logr"
 	middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"google.golang.org/grpc"
 	channelz "google.golang.org/grpc/channelz/service"
 	"google.golang.org/grpc/reflection"
 )
+
+var defaultNOPAuthFunc = func(ctx context.Context) (context.Context, error) {
+	return ctx, nil
+}
 
 type Server struct {
 	server *grpc.Server
@@ -21,6 +26,8 @@ type Server struct {
 func NewServer(port int, logger logr.Logger, register func(server *grpc.Server)) *Server {
 	interceptors := []grpc.UnaryServerInterceptor{
 		interceptor.NewRequestLogger(logger.WithName("request")),
+		interceptor.NewAuthTokenPropagator(),
+		grpc_auth.UnaryServerInterceptor(defaultNOPAuthFunc),
 	}
 
 	opts := []grpc.ServerOption{

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	authority "github.com/Nulandmori/micorservices-pattern/services/authority/proto"
+	catalog "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/proto"
 )
 
@@ -13,7 +14,7 @@ var (
 
 type server struct {
 	proto.UnimplementedGatewayServiceServer
-
+	catalogClient   catalog.CatalogServiceClient
 	authorityClient authority.AuthorityServiceClient
 }
 
@@ -23,4 +24,8 @@ func (s *server) Signup(ctx context.Context, req *authority.SignupRequest) (*aut
 
 func (s *server) Signin(ctx context.Context, req *authority.SigninRequest) (*authority.SigninResponse, error) {
 	return s.authorityClient.Signin(ctx, req)
+}
+
+func (s *server) CreateItem(ctx context.Context, req *catalog.CreateItemRequest) (*catalog.CreateItemResponse, error) {
+	return s.catalogClient.CreateItem(ctx, req)
 }
