@@ -34,7 +34,3 @@ gen-proto: $(BUF) $(PROTOC_GEN_GO) $(PROTOC_GEN_GO_GRPC) $(PROTOC_GEN_GRPC_GATEW
 
 clean:
 	rm -f $(BIN_DIR)/*
-
-
-
-

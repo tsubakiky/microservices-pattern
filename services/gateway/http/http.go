@@ -9,6 +9,7 @@ import (
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -29,7 +30,7 @@ func RunServer(ctx context.Context, port int, grpcPort int) error {
 	)
 
 	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}

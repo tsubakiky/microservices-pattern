@@ -4,16 +4,15 @@ RUN apk add --no-cache git
 
 WORKDIR /work
 
-COPY go.mod go.mod
-COPY go.sum go.sum
+COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . .
-RUN go build -o /usr/bin/authority ./services/authority
+COPY . ./
+RUN  CGO_ENABLED=0 GOOS=linux go build -o usr/bin/authority ./services/authority
 FROM alpine
 
 EXPOSE 8080
 WORKDIR /root/
 
-COPY --from=builder /usr/bin/authority .
+COPY --from=builder work/usr/bin/authority /usr/bin/authority
 CMD ["/usr/bin/authority"]

@@ -2,7 +2,9 @@ package grpc
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
+	"strings"
 
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
@@ -10,16 +12,26 @@ import (
 	customer "github.com/Nulandmori/micorservices-pattern/services/customer/proto"
 	"github.com/go-logr/logr"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 	opts := []grpc.DialOption{
-		grpc.WithInsecure(),
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
 
-	conn, err := grpc.DialContext(ctx, env.GetEnv("CUSTOMER_SERVICE_ADDR", "customer_app:8080"), opts...)
+	customerServiceAddr := env.GetEnv("CUSTOMER_SERVICE_ADDR", "customer-service-y64oiofbkq-an.a.run.app:443")
+
+	if strings.Contains(customerServiceAddr, "443") {
+		creds := credentials.NewTLS(&tls.Config{})
+		opts = append(opts, grpc.WithTransportCredentials(creds))
+	} else {
+		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	}
+
+	conn, err := grpc.DialContext(ctx, customerServiceAddr, opts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial customer grpc server: %w", err)
 	}
