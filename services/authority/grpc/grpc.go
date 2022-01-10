@@ -16,15 +16,19 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+const (
+	defaultTLSPort = "443"
+)
+
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 	opts := []grpc.DialOption{
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
 
-	customerServiceAddr := env.GetEnv("CUSTOMER_SERVICE_ADDR", "customer-service-y64oiofbkq-an.a.run.app:443")
+	customerServiceAddr := env.MustGetEnv("CUSTOMER_SERVICE_ADDR")
 
-	if strings.Contains(customerServiceAddr, "443") {
+	if strings.Contains(customerServiceAddr, defaultTLSPort) {
 		creds := credentials.NewTLS(&tls.Config{})
 		opts = append(opts, grpc.WithTransportCredentials(creds))
 	} else {
