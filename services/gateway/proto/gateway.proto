@@ -29,4 +29,10 @@ service GatewayService {
       body: "*"
     };
   }
+
+  rpc GetItem(catalog.GetItemRequest) returns (catalog.GetItemResponse){
+    option (google.api.http) = {
+      get: "/catalog/items/{id}"
+    };
+  }
 }

@@ -22,3 +22,14 @@ func (s *server) CreateItem(ctx context.Context, req *proto.CreateItemRequest) (
 		},
 	}, nil
 }
+
+func (s *server) GetItem(ctx context.Context, req *proto.GetItemRequest) (*proto.GetItemResponse, error) {
+	return &proto.GetItemResponse{
+		Item: &proto.Item{
+			Id:         req.Id,
+			CustomerId: "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
+			Title:      "Keyboard",
+			Price:      30000,
+		},
+	}, nil
+}

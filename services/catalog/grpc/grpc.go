@@ -9,6 +9,7 @@ import (
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
 	"github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
+	customer "github.com/Nulandmori/micorservices-pattern/services/customer/proto"
 	item "github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
 	"google.golang.org/grpc"
@@ -27,23 +28,31 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 	}
 
 	itemServiceAddr := env.MustGetEnv("ITEM_SERVICE_ADDR")
+	customerServiceAddr := env.MustGetEnv("CUSTOMER_SERVICE_ADDR")
 
-	if strings.Contains(itemServiceAddr, defaultTLSPort) {
+	if strings.Contains(itemServiceAddr, defaultTLSPort) && strings.Contains(customerServiceAddr, defaultTLSPort) {
 		creds := credentials.NewTLS(&tls.Config{})
 		opts = append(opts, grpc.WithTransportCredentials(creds))
 	} else {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	conn, err := grpc.DialContext(ctx, itemServiceAddr, opts...)
+	iconn, err := grpc.DialContext(ctx, itemServiceAddr, opts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial item grpc server: %w", err)
 	}
 
-	itemClient := item.NewItemServiceClient(conn)
+	cconn, err := grpc.DialContext(ctx, customerServiceAddr, opts...)
+	if err != nil {
+		return fmt.Errorf("failed to dial customer grpc server: %w", err)
+	}
+
+	itemClient := item.NewItemServiceClient(iconn)
+	customerClient := customer.NewCustomerServiceClient(cconn)
 
 	svc := &server{
-		itemClient: itemClient,
+		itemClient:     itemClient,
+		customerClient: customerClient,
 	}
 	return pkggrpc.NewServer(port, logger, func(s *grpc.Server) {
 		proto.RegisterCatalogServiceServer(s, svc)

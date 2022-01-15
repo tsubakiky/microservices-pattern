@@ -13,8 +13,8 @@ import (
 	"io"
 	"net/http"
 
-	proto_2 "github.com/Nulandmori/micorservices-pattern/services/authority/proto"
-	proto_3 "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
+	proto_1 "github.com/Nulandmori/micorservices-pattern/services/authority/proto"
+	proto_2 "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/utilities"
 	"google.golang.org/grpc"
@@ -34,7 +34,7 @@ var _ = utilities.NewDoubleArray
 var _ = metadata.Join
 
 func request_GatewayService_Signup_0(ctx context.Context, marshaler runtime.Marshaler, client GatewayServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq proto_2.SignupRequest
+	var protoReq proto_1.SignupRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -51,7 +51,7 @@ func request_GatewayService_Signup_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_GatewayService_Signup_0(ctx context.Context, marshaler runtime.Marshaler, server GatewayServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq proto_2.SignupRequest
+	var protoReq proto_1.SignupRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -68,7 +68,7 @@ func local_request_GatewayService_Signup_0(ctx context.Context, marshaler runtim
 }
 
 func request_GatewayService_Signin_0(ctx context.Context, marshaler runtime.Marshaler, client GatewayServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq proto_2.SigninRequest
+	var protoReq proto_1.SigninRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -85,7 +85,7 @@ func request_GatewayService_Signin_0(ctx context.Context, marshaler runtime.Mars
 }
 
 func local_request_GatewayService_Signin_0(ctx context.Context, marshaler runtime.Marshaler, server GatewayServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq proto_2.SigninRequest
+	var protoReq proto_1.SigninRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -102,7 +102,7 @@ func local_request_GatewayService_Signin_0(ctx context.Context, marshaler runtim
 }
 
 func request_GatewayService_CreateItem_0(ctx context.Context, marshaler runtime.Marshaler, client GatewayServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq proto_3.CreateItemRequest
+	var protoReq proto_2.CreateItemRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -119,7 +119,7 @@ func request_GatewayService_CreateItem_0(ctx context.Context, marshaler runtime.
 }
 
 func local_request_GatewayService_CreateItem_0(ctx context.Context, marshaler runtime.Marshaler, server GatewayServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq proto_3.CreateItemRequest
+	var protoReq proto_2.CreateItemRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -131,6 +131,58 @@ func local_request_GatewayService_CreateItem_0(ctx context.Context, marshaler ru
 	}
 
 	msg, err := server.CreateItem(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_GatewayService_GetItem_0(ctx context.Context, marshaler runtime.Marshaler, client GatewayServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq proto_2.GetItemRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+
+	protoReq.Id, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+
+	msg, err := client.GetItem(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_GatewayService_GetItem_0(ctx context.Context, marshaler runtime.Marshaler, server GatewayServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq proto_2.GetItemRequest
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+
+	protoReq.Id, err = runtime.String(val)
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+
+	msg, err := server.GetItem(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -207,6 +259,29 @@ func RegisterGatewayServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		}
 
 		forward_GatewayService_CreateItem_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_GatewayService_GetItem_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/gateway.GatewayService/GetItem", runtime.WithHTTPPathPattern("/catalog/items/{id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_GatewayService_GetItem_0(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_GatewayService_GetItem_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -311,6 +386,26 @@ func RegisterGatewayServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 
 	})
 
+	mux.Handle("GET", pattern_GatewayService_GetItem_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req, "/gateway.GatewayService/GetItem", runtime.WithHTTPPathPattern("/catalog/items/{id}"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_GatewayService_GetItem_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_GatewayService_GetItem_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -320,6 +415,8 @@ var (
 	pattern_GatewayService_Signin_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"auth", "signin"}, ""))
 
 	pattern_GatewayService_CreateItem_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"catalog", "items"}, ""))
+
+	pattern_GatewayService_GetItem_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"catalog", "items", "id"}, ""))
 )
 
 var (
@@ -328,4 +425,6 @@ var (
 	forward_GatewayService_Signin_0 = runtime.ForwardResponseMessage
 
 	forward_GatewayService_CreateItem_0 = runtime.ForwardResponseMessage
+
+	forward_GatewayService_GetItem_0 = runtime.ForwardResponseMessage
 )

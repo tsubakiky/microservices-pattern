@@ -68,6 +68,7 @@ services:
       target: builder
     environment:
       - ITEM_SERVICE_ADDR=item_service:8080
+      - CUSTOMER_SERVICE_ADDR=customer_service:8080
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
