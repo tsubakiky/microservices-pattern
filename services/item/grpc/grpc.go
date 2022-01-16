@@ -11,7 +11,9 @@ import (
 
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 
-	svc := &server{}
+	svc := &server{
+		logger: logger.WithName("server"),
+	}
 
 	return pkggrpc.NewServer(port, logger, func(s *grpc.Server) {
 		proto.RegisterItemServiceServer(s, svc)

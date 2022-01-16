@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/interceptor"
+	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/server/interceptor"
 	"github.com/go-logr/logr"
 	middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"

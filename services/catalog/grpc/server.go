@@ -1,11 +1,8 @@
 package grpc
 
 import (
-	"bytes"
 	"context"
 
-	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
-	"github.com/lestrrat-go/jwx/jwt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -23,18 +20,8 @@ type server struct {
 }
 
 func (s *server) CreateItem(ctx context.Context, req *proto.CreateItemRequest) (*proto.CreateItemResponse, error) {
-	tokenStr, err := grpc_auth.AuthFromMD(ctx, "bearer")
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "token not found")
-	}
-
-	token, err := jwt.Parse(bytes.NewBufferString(tokenStr).Bytes())
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, "failed to parse access token")
-	}
-
 	res, err := s.itemClient.CreateItem(ctx, &item.CreateItemRequest{
-		CustomerId: token.Subject(),
+		CustomerId: "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
 		Title:      req.Title,
 		Price:      req.Price,
 	})

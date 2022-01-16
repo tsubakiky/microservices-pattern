@@ -10,6 +10,8 @@ services:
       context: .
       dockerfile: ./services/customer/Dockerfile
       target: builder
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
@@ -19,6 +21,7 @@ services:
     volumes:
       - "./services/customer/reflex.conf:/work/reflex.conf"
       - ".:/work"
+      - "${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}"
     container_name: customer_service
     networks:
       - microservices-pattern_default
@@ -29,6 +32,7 @@ services:
       target: builder
     environment:
       - CUSTOMER_SERVICE_ADDR=customer_service:8080
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
@@ -38,6 +42,7 @@ services:
     volumes:
       - "./services/authority/reflex.conf:/work/reflex.conf"
       - ".:/work"
+      - "${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}"
     container_name: authority_service
     networks:
       - microservices-pattern_default
@@ -49,6 +54,7 @@ services:
     environment:
       - AUTHORITY_SERVICE_ADDR=authority_service:8080
       - CATALOG_SERVICE_ADDR=catalog_service:8080
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
@@ -58,6 +64,7 @@ services:
     volumes:
       - "./services/gateway/reflex.conf:/work/reflex.conf"
       - ".:/work"
+      - "${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}"
     container_name: gateway_service
     networks:
       - microservices-pattern_default
@@ -69,6 +76,7 @@ services:
     environment:
       - ITEM_SERVICE_ADDR=item_service:8080
       - CUSTOMER_SERVICE_ADDR=customer_service:8080
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
@@ -78,6 +86,7 @@ services:
     volumes:
       - "./services/catalog/reflex.conf:/work/reflex.conf"
       - ".:/work"
+      - "${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}"
     container_name: catalog_service
     networks:
       - microservices-pattern_default
@@ -86,6 +95,8 @@ services:
       context: .
       dockerfile: ./services/item/Dockerfile
       target: builder
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
@@ -95,6 +106,7 @@ services:
     volumes:
       - "./services/item/reflex.conf:/work/reflex.conf"
       - ".:/work"
+      - "${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}"
     container_name: item_service
     networks:
       - microservices-pattern_default
