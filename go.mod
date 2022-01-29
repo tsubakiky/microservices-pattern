@@ -21,7 +21,7 @@ require (
 
 require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
-	google.golang.org/genproto v0.0.0-20211208223120-3a66f561d7aa
+	google.golang.org/genproto v0.0.0-20220107163113-42d7afdf6368
 )
 
 require (
@@ -30,7 +30,7 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.65.0 // indirect
+	cloud.google.com/go v0.100.2 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.0-20210816181553-5444fa50b93d // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -42,4 +42,13 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/crypto v0.0.0-20201217014255-9d1352758620 // indirect
 	golang.org/x/text v0.3.6 // indirect
+	google.golang.org/api v0.65.0
+)
+
+require (
+	cloud.google.com/go/compute v0.1.0 // indirect
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
+	go.opencensus.io v0.23.0 // indirect
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
 )

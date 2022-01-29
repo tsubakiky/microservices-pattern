@@ -3,12 +3,15 @@ package grpc
 import (
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"strings"
 
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
+	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/client/interceptor"
 	"github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
+	customer "github.com/Nulandmori/micorservices-pattern/services/customer/proto"
 	item "github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
 	"google.golang.org/grpc"
@@ -18,6 +21,10 @@ import (
 
 const (
 	defaultTLSPort = "443"
+	scope          = "https://www.google.com"
+	keyFile        = "services/catalog/.keys/creds.json"
+	iaudience      = "https://item-service-y64oiofbkq-an.a.run.app"
+	caudience      = "https://customer-service-y64oiofbkq-an.a.run.app"
 )
 
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
@@ -27,23 +34,40 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 	}
 
 	itemServiceAddr := env.MustGetEnv("ITEM_SERVICE_ADDR")
+	customerServiceAddr := env.MustGetEnv("CUSTOMER_SERVICE_ADDR")
 
-	if strings.Contains(itemServiceAddr, defaultTLSPort) {
-		creds := credentials.NewTLS(&tls.Config{})
-		opts = append(opts, grpc.WithTransportCredentials(creds))
+	if strings.Contains(itemServiceAddr, defaultTLSPort) && strings.Contains(customerServiceAddr, defaultTLSPort) {
+		systemRoots, err := x509.SystemCertPool()
+		if err != nil {
+			return fmt.Errorf("failed to get cert pool: %w", err)
+		}
+		cred := credentials.NewTLS(&tls.Config{
+			RootCAs: systemRoots,
+		})
+		opts = append(opts, grpc.WithTransportCredentials(cred))
 	} else {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	conn, err := grpc.DialContext(ctx, itemServiceAddr, opts...)
+	iopts := append(append([]grpc.DialOption{}, opts...), grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(iaudience)))
+	copts := append(append([]grpc.DialOption{}, opts...), grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)))
+
+	iconn, err := grpc.DialContext(ctx, itemServiceAddr, iopts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial item grpc server: %w", err)
 	}
 
-	itemClient := item.NewItemServiceClient(conn)
+	cconn, err := grpc.DialContext(ctx, customerServiceAddr, copts...)
+	if err != nil {
+		return fmt.Errorf("failed to dial customer grpc server: %w", err)
+	}
+
+	itemClient := item.NewItemServiceClient(iconn)
+	customerClient := customer.NewCustomerServiceClient(cconn)
 
 	svc := &server{
-		itemClient: itemClient,
+		itemClient:     itemClient,
+		customerClient: customerClient,
 	}
 	return pkggrpc.NewServer(port, logger, func(s *grpc.Server) {
 		proto.RegisterCatalogServiceServer(s, svc)

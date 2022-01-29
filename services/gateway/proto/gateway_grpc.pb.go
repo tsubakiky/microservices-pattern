@@ -23,6 +23,7 @@ type GatewayServiceClient interface {
 	Signup(ctx context.Context, in *proto.SignupRequest, opts ...grpc.CallOption) (*proto.SignupResponse, error)
 	Signin(ctx context.Context, in *proto.SigninRequest, opts ...grpc.CallOption) (*proto.SigninResponse, error)
 	CreateItem(ctx context.Context, in *proto1.CreateItemRequest, opts ...grpc.CallOption) (*proto1.CreateItemResponse, error)
+	GetItem(ctx context.Context, in *proto1.GetItemRequest, opts ...grpc.CallOption) (*proto1.GetItemResponse, error)
 }
 
 type gatewayServiceClient struct {
@@ -60,6 +61,15 @@ func (c *gatewayServiceClient) CreateItem(ctx context.Context, in *proto1.Create
 	return out, nil
 }
 
+func (c *gatewayServiceClient) GetItem(ctx context.Context, in *proto1.GetItemRequest, opts ...grpc.CallOption) (*proto1.GetItemResponse, error) {
+	out := new(proto1.GetItemResponse)
+	err := c.cc.Invoke(ctx, "/gateway.GatewayService/GetItem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GatewayServiceServer is the server API for GatewayService service.
 // All implementations must embed UnimplementedGatewayServiceServer
 // for forward compatibility
@@ -67,6 +77,7 @@ type GatewayServiceServer interface {
 	Signup(context.Context, *proto.SignupRequest) (*proto.SignupResponse, error)
 	Signin(context.Context, *proto.SigninRequest) (*proto.SigninResponse, error)
 	CreateItem(context.Context, *proto1.CreateItemRequest) (*proto1.CreateItemResponse, error)
+	GetItem(context.Context, *proto1.GetItemRequest) (*proto1.GetItemResponse, error)
 	mustEmbedUnimplementedGatewayServiceServer()
 }
 
@@ -82,6 +93,9 @@ func (UnimplementedGatewayServiceServer) Signin(context.Context, *proto.SigninRe
 }
 func (UnimplementedGatewayServiceServer) CreateItem(context.Context, *proto1.CreateItemRequest) (*proto1.CreateItemResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateItem not implemented")
+}
+func (UnimplementedGatewayServiceServer) GetItem(context.Context, *proto1.GetItemRequest) (*proto1.GetItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetItem not implemented")
 }
 func (UnimplementedGatewayServiceServer) mustEmbedUnimplementedGatewayServiceServer() {}
 
@@ -150,6 +164,24 @@ func _GatewayService_CreateItem_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GatewayService_GetItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(proto1.GetItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GatewayServiceServer).GetItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gateway.GatewayService/GetItem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GatewayServiceServer).GetItem(ctx, req.(*proto1.GetItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // GatewayService_ServiceDesc is the grpc.ServiceDesc for GatewayService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -168,6 +200,10 @@ var GatewayService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateItem",
 			Handler:    _GatewayService_CreateItem_Handler,
+		},
+		{
+			MethodName: "GetItem",
+			Handler:    _GatewayService_GetItem_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

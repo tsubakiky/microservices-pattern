@@ -6,6 +6,7 @@ option go_package = "github.com/Nulandmori/micorservices-pattern/services/catalo
 
 service CatalogService {
   rpc CreateItem(CreateItemRequest) returns (CreateItemResponse);
+  rpc GetItem(GetItemRequest) returns (GetItemResponse);
 }
 
 message CreateItemRequest {
@@ -14,6 +15,14 @@ message CreateItemRequest {
 }
 
 message CreateItemResponse {
+  Item item = 1;
+}
+
+message GetItemRequest {
+  string id = 1;
+}
+
+message GetItemResponse {
   Item item = 1;
 }
 

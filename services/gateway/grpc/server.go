@@ -29,3 +29,7 @@ func (s *server) Signin(ctx context.Context, req *authority.SigninRequest) (*aut
 func (s *server) CreateItem(ctx context.Context, req *catalog.CreateItemRequest) (*catalog.CreateItemResponse, error) {
 	return s.catalogClient.CreateItem(ctx, req)
 }
+
+func (s *server) GetItem(ctx context.Context, req *catalog.GetItemRequest) (*catalog.GetItemResponse, error) {
+	return s.catalogClient.GetItem(ctx, req)
+}
