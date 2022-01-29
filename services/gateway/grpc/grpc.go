@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
+	"github.com/Nulandmori/micorservices-pattern/pkg/firebase"
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
 	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/client/interceptor"
 	catalog "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
@@ -45,8 +46,15 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		return fmt.Errorf("failed to dial catalog grpc server: %w", err)
 	}
 
+	firebaseAuth, err := firebase.NewAuthClient()
+	if err != nil {
+		return fmt.Errorf("failed to initialize firebase auth client: %w", err)
+	}
+
 	svc := &server{
 		catalogClient: catalog.NewCatalogServiceClient(cconn),
+		firebaseAuth:  firebaseAuth,
+		logger:        logger,
 	}
 	return pkggrpc.NewServer(port, logger, func(s *grpc.Server) {
 		proto.RegisterGatewayServiceServer(s, svc)
