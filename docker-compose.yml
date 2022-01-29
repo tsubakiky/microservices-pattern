@@ -25,34 +25,12 @@ services:
     container_name: customer_service
     networks:
       - microservices-pattern_default
-  authority:
-    build:
-      context: .
-      dockerfile: ./services/authority/Dockerfile
-      target: builder
-    environment:
-      - CUSTOMER_SERVICE_ADDR=customer_service:8080
-      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
-    command: >
-      ash -c
-      "GO111MODULE=off go get github.com/cespare/reflex &&
-      reflex -c /work/reflex.conf"
-    ports:
-      - "127.0.0.1:50052:8080"
-    volumes:
-      - "./services/authority/reflex.conf:/work/reflex.conf"
-      - ".:/work"
-      - "${GOOGLE_APPLICATION_CREDENTIALS}:${GOOGLE_APPLICATION_CREDENTIALS}"
-    container_name: authority_service
-    networks:
-      - microservices-pattern_default
   gateway:
     build:
       context: .
       dockerfile: ./services/gateway/Dockerfile
       target: builder
     environment:
-      - AUTHORITY_SERVICE_ADDR=authority_service:8080
       - CATALOG_SERVICE_ADDR=catalog_service:8080
       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >

@@ -8,7 +8,7 @@ import (
 
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	pkggrpc "github.com/Nulandmori/micorservices-pattern/pkg/grpc"
-	authority "github.com/Nulandmori/micorservices-pattern/services/authority/proto"
+	"github.com/Nulandmori/micorservices-pattern/pkg/grpc/client/interceptor"
 	catalog "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/proto"
 	"github.com/go-logr/logr"
@@ -20,6 +20,7 @@ import (
 
 const (
 	defaultTLSPort = "443"
+	caudience      = "https://catalog-service-y64oiofbkq-an.a.run.app"
 )
 
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
@@ -28,29 +29,24 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
 	}
 
-	authorityServiceAddr := env.MustGetEnv("AUTHORITY_SERVICE_ADDR")
 	catalogServiceAddr := env.MustGetEnv("CATALOG_SERVICE_ADDR")
 
-	if strings.Contains(authorityServiceAddr, defaultTLSPort) && strings.Contains(catalogServiceAddr, defaultTLSPort) {
+	if strings.Contains(catalogServiceAddr, defaultTLSPort) {
 		creds := credentials.NewTLS(&tls.Config{})
 		opts = append(opts, grpc.WithTransportCredentials(creds))
 	} else {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	aconn, err := grpc.DialContext(ctx, authorityServiceAddr, opts...)
-	if err != nil {
-		return fmt.Errorf("failed to dial authority grpc server: %w", err)
-	}
+	copts := append(append([]grpc.DialOption{}, opts...), grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)))
 
-	cconn, err := grpc.DialContext(ctx, catalogServiceAddr, opts...)
+	cconn, err := grpc.DialContext(ctx, catalogServiceAddr, copts...)
 	if err != nil {
 		return fmt.Errorf("failed to dial catalog grpc server: %w", err)
 	}
 
 	svc := &server{
-		authorityClient: authority.NewAuthorityServiceClient(aconn),
-		catalogClient:   catalog.NewCatalogServiceClient(cconn),
+		catalogClient: catalog.NewCatalogServiceClient(cconn),
 	}
 	return pkggrpc.NewServer(port, logger, func(s *grpc.Server) {
 		proto.RegisterGatewayServiceServer(s, svc)
