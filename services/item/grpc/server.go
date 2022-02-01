@@ -3,6 +3,8 @@ package grpc
 import (
 	"context"
 
+	grpccontext "github.com/Nulandmori/micorservices-pattern/pkg/grpc/context"
+	"github.com/Nulandmori/micorservices-pattern/services/item/ent"
 	"github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
 )
@@ -14,6 +16,7 @@ var (
 type server struct {
 	proto.UnimplementedItemServiceServer
 	logger logr.Logger
+	db     *ent.Client
 }
 
 func (s *server) CreateItem(ctx context.Context, req *proto.CreateItemRequest) (*proto.CreateItemResponse, error) {
@@ -36,4 +39,10 @@ func (s *server) GetItem(ctx context.Context, req *proto.GetItemRequest) (*proto
 			Price:      30000,
 		},
 	}, nil
+}
+
+func (s *server) log(ctx context.Context) logr.Logger {
+	reqid := grpccontext.GetRequestID(ctx)
+
+	return s.logger.WithValues("request_id", reqid)
 }
