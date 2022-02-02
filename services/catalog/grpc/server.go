@@ -21,7 +21,7 @@ type server struct {
 
 func (s *server) CreateItem(ctx context.Context, req *proto.CreateItemRequest) (*proto.CreateItemResponse, error) {
 	res, err := s.itemClient.CreateItem(ctx, &item.CreateItemRequest{
-		CustomerId: "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
+		CustomerId: "K87zvdPQgESN8yYbhzCkKsYM8653",
 		Title:      req.Title,
 		Price:      req.Price,
 	})

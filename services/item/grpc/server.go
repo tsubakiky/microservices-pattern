@@ -5,6 +5,9 @@ import (
 
 	grpccontext "github.com/Nulandmori/micorservices-pattern/pkg/grpc/context"
 	"github.com/Nulandmori/micorservices-pattern/services/item/ent"
+	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
 	"github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
@@ -21,23 +24,33 @@ type server struct {
 }
 
 func (s *server) CreateItem(ctx context.Context, req *proto.CreateItemRequest) (*proto.CreateItemResponse, error) {
+	item, err := s.db.Item.Create().SetCustomerID(req.CustomerId).SetTitle(req.Title).SetPrice(req.Price).Save(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
 	return &proto.CreateItemResponse{
 		Item: &proto.Item{
-			Id:         "bda92da6-3270-4255-a756-dbe7d0aa333e",
-			CustomerId: req.CustomerId,
-			Title:      "Keyboard",
-			Price:      30000,
+			Id:         item.ID.String(),
+			CustomerId: item.CustomerID,
+			Title:      item.Title,
+			Price:      item.Price,
 		},
 	}, nil
 }
 
 func (s *server) GetItem(ctx context.Context, req *proto.GetItemRequest) (*proto.GetItemResponse, error) {
+	item, err := s.db.Item.Get(ctx, uuid.MustParse(req.Id))
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
 	return &proto.GetItemResponse{
 		Item: &proto.Item{
 			Id:         req.Id,
-			CustomerId: "7c0cde05-4df0-47f4-94c4-978dd9f56e5c",
-			Title:      "Keyboard",
-			Price:      30000,
+			CustomerId: item.CustomerID,
+			Title:      item.Title,
+			Price:      item.Price,
 		},
 	}, nil
 }
