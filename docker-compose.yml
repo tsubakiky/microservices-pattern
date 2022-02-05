@@ -73,12 +73,10 @@ services:
       context: .
       dockerfile: ./services/item/Dockerfile
       target: builder
+    env_file:
+      - ./item-variables.env
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
-      - DB_USER=postgres
-      - DB_PASS=y0vHeKgnPabH669I
-      - INSTANCE_CONNECTION_NAME=gaudiy-integration-test:asia-northeast1:myinstance
-      - DB_NAME=postgres
     command: >
       ash -c
       "GO111MODULE=off go get github.com/cespare/reflex &&
