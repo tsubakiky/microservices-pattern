@@ -1,4 +1,9 @@
 provider "google" {
-  project     = var.PROJECT_ID
+  project     = var.project_id
+  credentials = var.GOOGLE_CREDENTIALS
+}
+
+provider "google-beta" {
+  project     = var.project_id
   credentials = var.GOOGLE_CREDENTIALS
 }
