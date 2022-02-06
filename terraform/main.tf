@@ -43,7 +43,7 @@ module "lb-http" {
 
 resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   provider              = google-beta
-  name                  = "serverless_neg"
+  name                  = "serverless-neg"
   network_endpoint_type = "SERVERLESS"
   region                = "asia-northeast1"
   cloud_run {
