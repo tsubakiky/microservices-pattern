@@ -1,4 +1,4 @@
-name: "customer"
+name: customer
 
 on:
   push:

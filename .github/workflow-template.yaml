@@ -1,4 +1,4 @@
-name: "{{SERVICE_NAME}}"
+name: {{SERVICE_NAME}}
 
 on:
   push:

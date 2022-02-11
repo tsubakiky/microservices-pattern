@@ -1,4 +1,4 @@
-name: "item"
+name: item
 
 on:
   push:

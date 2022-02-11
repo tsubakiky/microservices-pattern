@@ -1,4 +1,4 @@
-name: "catalog"
+name: catalog
 
 on:
   push:

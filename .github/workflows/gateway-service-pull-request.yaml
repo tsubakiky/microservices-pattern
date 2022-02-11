@@ -1,4 +1,4 @@
-name: "gateway"
+name: gateway
 
 on:
   push:
