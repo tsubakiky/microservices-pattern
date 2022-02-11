@@ -3,7 +3,7 @@ terraform {
     organization = "example-org-7cd94b"
 
     workspaces {
-      name = "gh-actions-demo"
+      name = "microservices-pattern"
     }
   }
   required_providers {
