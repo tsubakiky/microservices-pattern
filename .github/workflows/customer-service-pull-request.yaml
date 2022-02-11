@@ -1,0 +1,42 @@
+name: "customer"
+
+on:
+  push:
+    paths:
+      - "services/customer/**"
+      - ".github/workflows/customer-service-pull-request.yaml"
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: setup go
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '1.17.6' # The Go version to download (if necessary) and use.\
+        id: go
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build
+        run: go build ./services/customer/...
+  test:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test
+        run: go test ./services/customer/... -v
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+          working-directory: services/customer
