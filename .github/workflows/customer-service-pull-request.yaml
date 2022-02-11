@@ -5,6 +5,10 @@ on:
     paths:
       - "services/customer/**"
       - ".github/workflows/customer-service-pull-request.yaml"
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - "services/customer/**"
 
 jobs:
   setup:

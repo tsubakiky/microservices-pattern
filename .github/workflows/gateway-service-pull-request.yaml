@@ -5,6 +5,10 @@ on:
     paths:
       - "services/gateway/**"
       - ".github/workflows/gateway-service-pull-request.yaml"
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - "services/gateway/**"
 
 jobs:
   setup:
