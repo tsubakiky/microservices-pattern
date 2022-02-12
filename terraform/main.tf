@@ -50,3 +50,37 @@ resource "google_compute_region_network_endpoint_group" "serverless_neg" {
     service = "gateway-service"
   }
 }
+
+resource "google_cloud_run_service" "default" {
+  name     = "example"
+  location = var.region
+  project  = var.project_id
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/gaudiy-integration-test/gateway-service:latest"
+        env {
+          name  = "AUTHORITY_SERVICE_ADDR"
+          value = "authority-service-y64oiofbkq-an.a.run.app:443"
+        }
+        env {
+          name  = "CATALOG_SERVICE_ADDR"
+          value = "catalog-service-y64oiofbkq-an.a.run.app:443"
+        }
+      }
+    }
+  }
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+resource "google_cloud_run_service_iam_member" "public-access" {
+  location = google_cloud_run_service.default.location
+  project  = google_cloud_run_service.default.project
+  service  = google_cloud_run_service.default.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
