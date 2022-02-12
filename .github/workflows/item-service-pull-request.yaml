@@ -5,10 +5,10 @@ on:
     paths:
       - "services/item/**"
       - ".github/workflows/item-service-pull-request.yaml"
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - "services/item/**"
+  # pull_request:
+  #   types: [opened, synchronize]
+  #   paths:
+  #     - "services/item/**"
 
 jobs:
   setup:
