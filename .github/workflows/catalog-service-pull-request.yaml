@@ -5,10 +5,10 @@ on:
     paths:
       - "services/catalog/**"
       - ".github/workflows/catalog-service-pull-request.yaml"
-  # pull_request:
-  #   types: [opened, synchronize]
-  #   paths:
-  #     - "services/catalog/**"
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - "services/catalog/**"
 
 jobs:
   setup:
