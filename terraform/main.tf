@@ -56,6 +56,12 @@ resource "google_cloud_run_service" "default" {
   location = var.region
   project  = var.project_id
 
+  metadata {
+    annotations = {
+      "run.googleapis.com/ingress" = "internal-and-cloud-load-balancing"
+    }
+  }
+
   template {
     spec {
       containers {
