@@ -1,4 +1,4 @@
-name: "item Pull Request Check"
+name: "item service Pull Request Check"
 
 on:
   push:

@@ -1,4 +1,4 @@
-name: "gateway Pull Request Check"
+name: "gateway service Pull Request Check"
 
 on:
   push:

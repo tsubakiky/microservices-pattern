@@ -1,4 +1,4 @@
-name: "{{SERVICE_NAME}} Pull Request Check"
+name: "{{SERVICE_NAME}} service Pull Request Check"
 
 on:
   push:
