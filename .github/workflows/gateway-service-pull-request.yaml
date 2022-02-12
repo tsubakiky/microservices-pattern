@@ -24,7 +24,6 @@ jobs:
       - name: Test
         run: go test ./services/gateway/... -v
   lint:
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
