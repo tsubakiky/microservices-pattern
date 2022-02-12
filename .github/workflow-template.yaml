@@ -14,12 +14,13 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: setup go
-      - uses: actions/setup-go@v2
+        uses: actions/setup-go@v2
         with:
           go-version: '1.17.6' # The Go version to download (if necessary) and use.\
         id: go
+      - name: check out
+        uses: actions/checkout@v2
   build:
     needs: setup
     runs-on: ubuntu-latest
