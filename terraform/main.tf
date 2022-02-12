@@ -90,8 +90,4 @@ resource "google_cloud_run_service_iam_member" "public-access" {
   service  = google_cloud_run_service.default.name
   role     = "roles/run.invoker"
   member   = "allUsers"
-
-  depends_on = [
-    google_cloud_run_service.default
-  ]
 }
