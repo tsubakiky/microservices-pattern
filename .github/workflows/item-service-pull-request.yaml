@@ -14,16 +14,18 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: setup go
+      - name: Install Go
         uses: actions/setup-go@v2
         with:
           go-version: '^1.17' # The Go version to download (if necessary) and use.\
-        id: go
-      - name: check out
+      - name: Check out code
         uses: actions/checkout@v2
-      - name: build
-        run: go mod tidy && go build ./services/item/...
-      - name: test
+      - name: Install dependencies
+        run: |
+          go mod download
+      - name: Build
+        run: go build ./services/item/...
+      - name: Test
         run: go test ./services/item/... -v
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
