@@ -24,15 +24,21 @@ jobs:
       - name: Install dependencies
         run: |
           go mod download
-      # - name: Build
-      #   run: go build ./services/{{SERVICE_NAME}}/...
       - name: Test
         run: go test ./services/{{SERVICE_NAME}}/... -v
   build:
     needs: setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.17' # The Go version to download (if necessary) and use.\
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          go mod download
       - name: Build
         run: go build ./services/{{SERVICE_NAME}}/...
   # test:
