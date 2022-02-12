@@ -28,9 +28,6 @@ jobs:
       - name: Test
         run: go test ./services/{{SERVICE_NAME}}/... -v
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.29
   # build:
   #   needs: setup
   #   runs-on: ubuntu-latest
@@ -41,8 +38,13 @@ jobs:
   #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v2
-  # lint:
-  #   needs: setup
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
+  lint:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.29
+          working-directory: services/{{SERVICE_NAME}}
