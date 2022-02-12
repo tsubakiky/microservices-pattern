@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: build
-        run: go build ./services/gateway/...
+        run: go mod tidy && go build ./services/gateway/...
   test:
     needs: setup
     runs-on: ubuntu-latest
