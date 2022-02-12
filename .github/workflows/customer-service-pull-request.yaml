@@ -18,20 +18,23 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '^1.17' # The Go version to download (if necessary) and use.\
+        id: go
       - name: Check out code
         uses: actions/checkout@v2
       - name: Install dependencies
         run: |
           go mod download
-      - name: Build
-        run: go build ./services/customer/...
+      # - name: Build
+      #   run: go build ./services/customer/...
       - name: Test
         run: go test ./services/customer/... -v
-  # build:
-  #   needs: setup
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: go build ./services/customer/...
   # test:
   #   needs: setup
   #   runs-on: ubuntu-latest
