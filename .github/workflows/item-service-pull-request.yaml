@@ -27,7 +27,6 @@ jobs:
         run: go build ./services/item/...
       - name: Test
         run: go test ./services/item/... -v
-      - name: golangci-lint
   # build:
   #   needs: setup
   #   runs-on: ubuntu-latest

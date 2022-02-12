@@ -27,7 +27,6 @@ jobs:
         run: go build ./services/gateway/...
       - name: Test
         run: go test ./services/gateway/... -v
-      - name: golangci-lint
   # build:
   #   needs: setup
   #   runs-on: ubuntu-latest
