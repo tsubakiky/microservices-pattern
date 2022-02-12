@@ -1,33 +1,13 @@
-name: {{SERVICE_NAME}}
+name: "{{SERVICE_NAME}} Pull Request Check"
 
 on:
   push:
     paths:
       - "services/{{SERVICE_NAME}}/**"
       - ".github/workflows/{{SERVICE_NAME}}-service-pull-request.yaml"
-  pull_request:
-    types: [opened, synchronize]
-    paths:
-      - "services/{{SERVICE_NAME}}/**"
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Go
-        uses: actions/setup-go@v2
-        with:
-          go-version: '^1.17' # The Go version to download (if necessary) and use.\
-        id: go
-      - name: Check out code
-        uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          go mod download
-      - name: Test
-        run: go test ./services/{{SERVICE_NAME}}/... -v
-  build:
-    needs: setup
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Install Go
@@ -41,13 +21,10 @@ jobs:
           go mod download
       - name: Build
         run: go build ./services/{{SERVICE_NAME}}/...
-  # test:
-  #   needs: setup
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
+      - name: Test
+        run: go test ./services/{{SERVICE_NAME}}/... -v
   lint:
-    needs: setup
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
