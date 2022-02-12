@@ -69,6 +69,7 @@ resource "google_cloud_run_service" "default" {
           value = "catalog-service-y64oiofbkq-an.a.run.app:443"
         }
       }
+      service_account_name = "gateway-service@gaudiy-integration-test.iam.gserviceaccount.com"
     }
   }
   traffic {
@@ -80,7 +81,7 @@ resource "google_cloud_run_service" "default" {
 resource "google_cloud_run_service_iam_member" "public-access" {
   location = google_cloud_run_service.default.location
   project  = google_cloud_run_service.default.project
-  service  = "gateway-service"
+  service  = google_cloud_run_service.default.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
