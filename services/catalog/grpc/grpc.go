@@ -21,8 +21,6 @@ import (
 
 const (
 	defaultTLSPort = "443"
-	scope          = "https://www.google.com"
-	keyFile        = "services/catalog/.keys/creds.json"
 	iaudience      = "https://item-service-y64oiofbkq-an.a.run.app"
 	caudience      = "https://customer-service-y64oiofbkq-an.a.run.app"
 )

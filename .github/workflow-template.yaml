@@ -1,4 +1,4 @@
-name: "{{SERVICE_NAME}}"
+name: "{{SERVICE_NAME}} service Pull Request Check"
 
 on:
   push:
@@ -7,31 +7,23 @@ on:
       - ".github/workflows/{{SERVICE_NAME}}-service-pull-request.yaml"
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: setup go
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '1.17.6' # The Go version to download (if necessary) and use.\
-        id: go
-  build:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: build
-        run: go build ./services/{{SERVICE_NAME}}/...
   test:
-    needs: setup
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: test
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '^1.17' # The Go version to download (if necessary) and use.\
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          go mod download
+      - name: Build
+        run: go build ./services/{{SERVICE_NAME}}/...
+      - name: Test
         run: go test ./services/{{SERVICE_NAME}}/... -v
   lint:
-    needs: setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
