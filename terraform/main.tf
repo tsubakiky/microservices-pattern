@@ -102,6 +102,6 @@ resource "google_cloud_run_service_iam_member" "public-access" {
 
   depends_on = [
     google_cloud_run_service.default,
-    google_iam_policy.noauth
+    data.google_iam_policy.noauth
   ]
 }
