@@ -58,7 +58,9 @@ resource "google_cloud_run_service" "default" {
 
   metadata {
     annotations = {
-      "run.googleapis.com/ingress" = "internal-and-cloud-load-balancing"
+      "client.knative.dev/user-image"  = "gcr.io/gaudiy-integration-test/gateway-service"
+      "run.googleapis.com/client-name" = "cloud-console"
+      "run.googleapis.com/ingress"     = "internal-and-cloud-load-balancing"
     }
   }
 
