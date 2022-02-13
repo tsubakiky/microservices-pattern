@@ -93,7 +93,7 @@ resource "google_cloud_run_service" "catalog-service" {
   template {
     spec {
       containers {
-        image = "gcr.io/gaudiy-integration-test/gateway-service"
+        image = "gcr.io/gaudiy-integration-test/catalog-service"
         env {
           name  = "CUSTOMER_SERVICE_ADDR"
           value = "customer-service-y64oiofbkq-an.a.run.app:443"
@@ -144,8 +144,7 @@ resource "google_cloud_run_service" "item-service" {
 
   metadata {
     annotations = {
-      "run.googleapis.com/ingress"            = "internal"
-      "run.googleapis.com/cloudsql-instances" = "gaudiy-integration-test:asia-northeast1:myinstance"
+      "run.googleapis.com/ingress" = "internal"
     }
   }
 
