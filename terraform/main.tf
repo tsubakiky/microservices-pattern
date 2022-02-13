@@ -65,7 +65,7 @@ resource "google_cloud_run_service" "default" {
   template {
     spec {
       containers {
-        image = "gcr.io/gaudiy-integration-test/gateway-service:latest"
+        image = "gcr.io/gaudiy-integration-test/gateway-service"
         env {
           name  = "AUTHORITY_SERVICE_ADDR"
           value = "authority-service-y64oiofbkq-an.a.run.app:443"
