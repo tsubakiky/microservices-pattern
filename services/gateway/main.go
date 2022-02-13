@@ -12,7 +12,7 @@ import (
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/http"
 )
 
-// run server
+// run server main
 func main() {
 	run.Run(server)
 }
