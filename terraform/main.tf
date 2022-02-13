@@ -58,9 +58,7 @@ resource "google_cloud_run_service" "default" {
 
   metadata {
     annotations = {
-      "client.knative.dev/user-image"  = "gcr.io/gaudiy-integration-test/gateway-service"
-      "run.googleapis.com/client-name" = "cloud-console"
-      "run.googleapis.com/ingress"     = "internal-and-cloud-load-balancing"
+      "run.googleapis.com/ingress" = "internal-and-cloud-load-balancing"
     }
   }
 
@@ -69,15 +67,110 @@ resource "google_cloud_run_service" "default" {
       containers {
         image = "gcr.io/gaudiy-integration-test/gateway-service"
         env {
-          name  = "AUTHORITY_SERVICE_ADDR"
-          value = "authority-service-y64oiofbkq-an.a.run.app:443"
-        }
-        env {
           name  = "CATALOG_SERVICE_ADDR"
           value = "catalog-service-y64oiofbkq-an.a.run.app:443"
         }
       }
       service_account_name = "gateway-service@gaudiy-integration-test.iam.gserviceaccount.com"
+    }
+  }
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+resource "google_cloud_run_service" "catalog-service" {
+  name     = "catalog-service"
+  location = var.region
+  project  = var.project_id
+
+  metadata {
+    annotations = {
+      "run.googleapis.com/ingress" = "internal"
+    }
+  }
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/gaudiy-integration-test/gateway-service"
+        env {
+          name  = "CUSTOMER_SERVICE_ADDR"
+          value = "customer-service-y64oiofbkq-an.a.run.app:443"
+        }
+        env {
+          name  = "ITEM_SERVICE_ADDR"
+          value = "item-service-y64oiofbkq-an.a.run.app:443"
+        }
+      }
+      service_account_name = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
+    }
+  }
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+resource "google_cloud_run_service" "customer-service" {
+  name     = "customer-service"
+  location = var.region
+  project  = var.project_id
+
+  metadata {
+    annotations = {
+      "run.googleapis.com/ingress" = "internal"
+    }
+  }
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/gaudiy-integration-test/customer-service"
+      }
+      service_account_name = "customer-service@gaudiy-integration-test.iam.gserviceaccount.com"
+    }
+  }
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+resource "google_cloud_run_service" "item-service" {
+  name     = "item-service"
+  location = var.region
+  project  = var.project_id
+
+  metadata {
+    annotations = {
+      "run.googleapis.com/ingress"            = "internal"
+      "run.googleapis.com/cloudsql-instances" = "gaudiy-integration-test:asia-northeast1:myinstance"
+    }
+  }
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/gaudiy-integration-test/item-service"
+        env {
+          name  = "DB_NAME"
+          value = var.db_name
+        }
+        env {
+          name  = "DB_PASS"
+          value = var.db_pass
+        }
+        env {
+          name  = "DB_USER"
+          value = var.db_user
+        }
+        env {
+          name  = "INSTANCE_CONNECTION_NAME"
+          value = var.instance_connection_name
+        }
+      }
+      service_account_name = "item-service@gaudiy-integration-test.iam.gserviceaccount.com"
     }
   }
   traffic {
@@ -93,3 +186,25 @@ resource "google_cloud_run_service_iam_member" "public-access" {
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
+resource "google_cloud_run_service_iam_member" "catalog-service-private-access" {
+  location = google_cloud_run_service.catalog-service.location
+  project  = google_cloud_run_service.catalog-service.project
+  service  = google_cloud_run_service.catalog-service.name
+  role     = "roles/run.invoker"
+  member   = "gateway-service@gaudiy-integration-test.iam.gserviceaccount.com"
+}
+resource "google_cloud_run_service_iam_member" "customer-service-private-access" {
+  location = google_cloud_run_service.customer-service.location
+  project  = google_cloud_run_service.customer-service.project
+  service  = google_cloud_run_service.customer-service.name
+  role     = "roles/run.invoker"
+  member   = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
+}
+resource "google_cloud_run_service_iam_member" "item-service-private-access" {
+  location = google_cloud_run_service.item-service.location
+  project  = google_cloud_run_service.item-service.project
+  service  = google_cloud_run_service.item-service.name
+  role     = "roles/run.invoker"
+  member   = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
+}
+

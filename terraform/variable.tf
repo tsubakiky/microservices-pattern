@@ -36,7 +36,28 @@ variable "domain" {
   type        = string
 }
 
-variable "lb-name" {
+variable "lb_name" {
   description = "Name for load balancer and associated resources"
   default     = "run-lb"
 }
+
+variable "db_name" {
+  description = "Name for cloud sql"
+  type        = string
+}
+
+variable "db_pass" {
+  description = "Pass for cloud sql"
+  type        = string
+}
+
+variable "db_user" {
+  description = "User for cloud sql"
+  type        = string
+}
+
+variable "instance_connection_name" {
+  description = "Name for cloud sql for postgresql instance"
+  type        = string
+}
+
