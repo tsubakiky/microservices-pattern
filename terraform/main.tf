@@ -78,6 +78,8 @@ resource "google_cloud_run_service" "default" {
     percent         = 100
     latest_revision = true
   }
+
+  autogenerate_revision_name = true
 }
 resource "google_cloud_run_service" "catalog-service" {
   name     = "catalog-service"
@@ -185,25 +187,33 @@ resource "google_cloud_run_service_iam_member" "public-access" {
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
-resource "google_cloud_run_service_iam_member" "catalog-service-private-access" {
+resource "google_cloud_run_service_iam_binding" "catalog-service-private-access" {
   location = google_cloud_run_service.catalog-service.location
   project  = google_cloud_run_service.catalog-service.project
   service  = google_cloud_run_service.catalog-service.name
   role     = "roles/run.invoker"
-  member   = "gateway-service@gaudiy-integration-test.iam.gserviceaccount.com"
+  members = [
+    "serviceAccount:gateway-service@gaudiy-integration-test.iam.gserviceaccount.com",
+  ]
 }
-resource "google_cloud_run_service_iam_member" "customer-service-private-access" {
+resource "google_cloud_run_service_iam_binding" "customer-service-private-access" {
   location = google_cloud_run_service.customer-service.location
   project  = google_cloud_run_service.customer-service.project
   service  = google_cloud_run_service.customer-service.name
   role     = "roles/run.invoker"
   member   = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
+  members = [
+    "serviceAccount:catalog-service@gaudiy-integration-test.iam.gserviceaccount.com",
+  ]
 }
-resource "google_cloud_run_service_iam_member" "item-service-private-access" {
+resource "google_cloud_run_service_iam_binding" "item-service-private-access" {
   location = google_cloud_run_service.item-service.location
   project  = google_cloud_run_service.item-service.project
   service  = google_cloud_run_service.item-service.name
   role     = "roles/run.invoker"
   member   = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
+  members = [
+    "serviceAccount:catalog-service@gaudiy-integration-test.iam.gserviceaccount.com",
+  ]
 }
 
