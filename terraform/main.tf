@@ -47,11 +47,11 @@ resource "google_compute_region_network_endpoint_group" "serverless_neg" {
   network_endpoint_type = "SERVERLESS"
   region                = "asia-northeast1"
   cloud_run {
-    service = google_cloud_run_service.default.name
+    service = google_cloud_run_service.gateway-service.name
   }
 }
 
-resource "google_cloud_run_service" "default" {
+resource "google_cloud_run_service" "gateway-service" {
   name     = "gateway-service"
   location = var.region
   project  = var.project_id
@@ -187,9 +187,9 @@ resource "google_cloud_run_service" "item-service" {
 }
 
 resource "google_cloud_run_service_iam_member" "public-access" {
-  location = google_cloud_run_service.default.location
-  project  = google_cloud_run_service.default.project
-  service  = google_cloud_run_service.default.name
+  location = google_cloud_run_service.gateway-service.location
+  project  = google_cloud_run_service.gateway-service.project
+  service  = google_cloud_run_service.gateway-service.name
   role     = "roles/run.invoker"
   member   = "allUsers"
 }
