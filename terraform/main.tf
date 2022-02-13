@@ -221,3 +221,71 @@ resource "google_cloud_run_service_iam_binding" "item-service-private-access" {
   ]
 }
 
+resource "google_sql_database" "myinstance-postgres" {
+  charset   = "UTF8"
+  collation = "en_US.UTF8"
+  instance  = google_sql_database_instance.myinstance.name
+  name      = "postgres"
+  project   = var.project_id
+}
+
+resource "google_sql_database_instance" "myinstance" {
+  database_version = "POSTGRES_13"
+  name             = "myinstance"
+  project          = var.project_id
+  region           = var.region
+
+  settings {
+    activation_policy = "ALWAYS"
+    availability_type = "ZONAL"
+
+    backup_configuration {
+      backup_retention_settings {
+        retained_backups = "7"
+        retention_unit   = "COUNT"
+      }
+
+      binary_log_enabled             = "false"
+      enabled                        = "false"
+      location                       = "asia"
+      point_in_time_recovery_enabled = "false"
+      start_time                     = "11:00"
+      transaction_log_retention_days = "7"
+    }
+
+    crash_safe_replication = "false"
+
+    database_flags {
+      name  = "cloudsql.iam_authentication"
+      value = "on"
+    }
+
+    disk_autoresize       = "true"
+    disk_autoresize_limit = "0"
+    disk_size             = "100"
+    disk_type             = "PD_SSD"
+
+    ip_configuration {
+      authorized_networks {
+        name  = "mypgadmin"
+        value = "39.110.217.10"
+      }
+
+      ipv4_enabled = "true"
+      require_ssl  = "false"
+    }
+
+    location_preference {
+      zone = "asia-northeast1-a"
+    }
+
+    maintenance_window {
+      day  = "0"
+      hour = "0"
+    }
+
+    pricing_plan     = "PER_USE"
+    replication_type = "SYNCHRONOUS"
+    tier             = "db-custom-1-3840"
+  }
+}
