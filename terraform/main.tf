@@ -253,8 +253,6 @@ resource "google_sql_database_instance" "myinstance" {
       transaction_log_retention_days = "7"
     }
 
-    crash_safe_replication = "false"
-
     database_flags {
       name  = "cloudsql.iam_authentication"
       value = "on"
@@ -279,13 +277,7 @@ resource "google_sql_database_instance" "myinstance" {
       zone = "asia-northeast1-a"
     }
 
-    maintenance_window {
-      day  = "0"
-      hour = "0"
-    }
-
-    pricing_plan     = "PER_USE"
-    replication_type = "SYNCHRONOUS"
-    tier             = "db-custom-1-3840"
+    pricing_plan = "PER_USE"
+    tier         = "db-custom-1-3840"
   }
 }
