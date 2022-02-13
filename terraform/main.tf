@@ -201,7 +201,6 @@ resource "google_cloud_run_service_iam_binding" "customer-service-private-access
   project  = google_cloud_run_service.customer-service.project
   service  = google_cloud_run_service.customer-service.name
   role     = "roles/run.invoker"
-  member   = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
   members = [
     "serviceAccount:catalog-service@gaudiy-integration-test.iam.gserviceaccount.com",
   ]
@@ -211,7 +210,6 @@ resource "google_cloud_run_service_iam_binding" "item-service-private-access" {
   project  = google_cloud_run_service.item-service.project
   service  = google_cloud_run_service.item-service.name
   role     = "roles/run.invoker"
-  member   = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
   members = [
     "serviceAccount:catalog-service@gaudiy-integration-test.iam.gserviceaccount.com",
   ]
