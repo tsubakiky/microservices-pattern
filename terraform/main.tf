@@ -112,6 +112,8 @@ resource "google_cloud_run_service" "catalog-service" {
     percent         = 100
     latest_revision = true
   }
+
+  autogenerate_revision_name = true
 }
 
 resource "google_cloud_run_service" "customer-service" {
@@ -137,6 +139,8 @@ resource "google_cloud_run_service" "customer-service" {
     percent         = 100
     latest_revision = true
   }
+
+  autogenerate_revision_name = true
 }
 
 resource "google_cloud_run_service" "item-service" {
@@ -178,6 +182,8 @@ resource "google_cloud_run_service" "item-service" {
     percent         = 100
     latest_revision = true
   }
+
+  autogenerate_revision_name = true
 }
 
 resource "google_cloud_run_service_iam_member" "public-access" {
