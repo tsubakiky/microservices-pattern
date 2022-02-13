@@ -5,6 +5,7 @@ on:
     paths:
       - "services/gateway/**"
       - ".github/workflows/gateway-service-pull-request.yaml"
+      - ".github/workflows/gateway-service-deploy.yaml"
   workflow_dispatch:
 
 env:
