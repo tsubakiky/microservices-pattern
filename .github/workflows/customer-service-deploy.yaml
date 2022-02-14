@@ -2,6 +2,8 @@ name: Deploy customer service
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "services/customer/**"
       - ".github/workflows/customer-service-pull-request.yaml"

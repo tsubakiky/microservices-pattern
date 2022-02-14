@@ -2,6 +2,8 @@ name: Deploy catalog service
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "services/catalog/**"
       - ".github/workflows/catalog-service-pull-request.yaml"

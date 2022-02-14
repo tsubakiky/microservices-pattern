@@ -2,6 +2,8 @@ name: Deploy {{SERVICE_NAME}} service
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "services/{{SERVICE_NAME}}/**"
       - ".github/workflows/{{SERVICE_NAME}}-service-pull-request.yaml"

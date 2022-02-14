@@ -2,6 +2,8 @@ name: Deploy item service
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "services/item/**"
       - ".github/workflows/item-service-pull-request.yaml"

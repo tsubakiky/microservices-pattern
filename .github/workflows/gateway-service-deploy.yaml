@@ -2,6 +2,8 @@ name: Deploy gateway service
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "services/gateway/**"
       - ".github/workflows/gateway-service-pull-request.yaml"
