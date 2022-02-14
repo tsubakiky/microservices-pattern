@@ -1,4 +1,4 @@
-name: "customer service Pull Request Check"
+name: "Pull Request Check customer service"
 
 on:
   push:

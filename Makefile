@@ -34,3 +34,9 @@ gen-proto: $(BUF) $(PROTOC_GEN_GO) $(PROTOC_GEN_GO_GRPC) $(PROTOC_GEN_GRPC_GATEW
 
 clean:
 	rm -f $(BIN_DIR)/*
+
+gen-deploy-workflow-template:
+	chmod +x build/workflows/deploy-workflow.sh && build/workflows/deploy-workflow.sh
+
+gen-pull-request-workflow-template:
+	chmod +x build/workflows/pull-request-workflow.sh && build/workflows/pull-request-workflow.sh
