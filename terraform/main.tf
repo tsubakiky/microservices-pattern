@@ -65,13 +65,13 @@ resource "google_cloud_run_service" "gateway-service" {
   template {
     spec {
       containers {
-        image = "gcr.io/gaudiy-integration-test/gateway-service"
+        image = "gcr.io/${var.project_id}/gateway-service"
         env {
           name  = "CATALOG_SERVICE_ADDR"
           value = "catalog-service-y64oiofbkq-an.a.run.app:443"
         }
       }
-      service_account_name = "gateway-service@gaudiy-integration-test.iam.gserviceaccount.com"
+      service_account_name = "gateway-service@${var.project_id}.iam.gserviceaccount.com"
     }
   }
   traffic {
@@ -95,7 +95,7 @@ resource "google_cloud_run_service" "catalog-service" {
   template {
     spec {
       containers {
-        image = "gcr.io/gaudiy-integration-test/catalog-service"
+        image = "gcr.io/${var.project_id}/catalog-service"
         env {
           name  = "CUSTOMER_SERVICE_ADDR"
           value = "customer-service-y64oiofbkq-an.a.run.app:443"
@@ -105,7 +105,7 @@ resource "google_cloud_run_service" "catalog-service" {
           value = "item-service-y64oiofbkq-an.a.run.app:443"
         }
       }
-      service_account_name = "catalog-service@gaudiy-integration-test.iam.gserviceaccount.com"
+      service_account_name = "catalog-service@${var.project_id}.iam.gserviceaccount.com"
     }
   }
   traffic {
@@ -130,9 +130,9 @@ resource "google_cloud_run_service" "customer-service" {
   template {
     spec {
       containers {
-        image = "gcr.io/gaudiy-integration-test/customer-service"
+        image = "gcr.io/${var.project_id}/customer-service"
       }
-      service_account_name = "customer-service@gaudiy-integration-test.iam.gserviceaccount.com"
+      service_account_name = "customer-service@${var.project_id}.iam.gserviceaccount.com"
     }
   }
   traffic {
@@ -157,7 +157,7 @@ resource "google_cloud_run_service" "item-service" {
   template {
     spec {
       containers {
-        image = "gcr.io/gaudiy-integration-test/item-service"
+        image = "gcr.io/${var.project_id}/item-service"
         env {
           name  = "DB_NAME"
           value = var.db_name
@@ -175,7 +175,7 @@ resource "google_cloud_run_service" "item-service" {
           value = var.instance_connection_name
         }
       }
-      service_account_name = "item-service@gaudiy-integration-test.iam.gserviceaccount.com"
+      service_account_name = "item-service@${var.project_id}.iam.gserviceaccount.com"
     }
   }
   traffic {
@@ -199,7 +199,7 @@ resource "google_cloud_run_service_iam_binding" "catalog-service-private-access"
   service  = google_cloud_run_service.catalog-service.name
   role     = "roles/run.invoker"
   members = [
-    "serviceAccount:gateway-service@gaudiy-integration-test.iam.gserviceaccount.com",
+    "serviceAccount:gateway-service@${var.project_id}.iam.gserviceaccount.com",
   ]
 }
 resource "google_cloud_run_service_iam_binding" "customer-service-private-access" {
@@ -208,7 +208,7 @@ resource "google_cloud_run_service_iam_binding" "customer-service-private-access
   service  = google_cloud_run_service.customer-service.name
   role     = "roles/run.invoker"
   members = [
-    "serviceAccount:catalog-service@gaudiy-integration-test.iam.gserviceaccount.com",
+    "serviceAccount:catalog-service@${var.project_id}.iam.gserviceaccount.com",
   ]
 }
 resource "google_cloud_run_service_iam_binding" "item-service-private-access" {
@@ -217,7 +217,7 @@ resource "google_cloud_run_service_iam_binding" "item-service-private-access" {
   service  = google_cloud_run_service.item-service.name
   role     = "roles/run.invoker"
   members = [
-    "serviceAccount:catalog-service@gaudiy-integration-test.iam.gserviceaccount.com",
+    "serviceAccount:catalog-service@${var.project_id}.iam.gserviceaccount.com",
   ]
 }
 

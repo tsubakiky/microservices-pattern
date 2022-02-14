@@ -28,7 +28,7 @@ steps:
     'services',
     'add-iam-policy-binding',
     '${_SERVICE_NAME}',
-    '--member=serviceAccount:gateway-service@gaudiy-integration-test.iam.gserviceaccount.com',
+    '--member=serviceAccount:gateway-service@${PROJECT_ID}.iam.gserviceaccount.com',
     '--role=roles/run.invoker',
     '--region',
     '${_REGION}',
