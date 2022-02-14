@@ -1,17 +1,17 @@
-name: Deploy gateway service
+name: Deploy {{SERVICE_NAME}} service
 
 on:
   push:
     paths:
-      - "services/gateway/**"
-      - ".github/workflows/gateway-service-pull-request.yaml"
-      - ".github/workflows/gateway-service-deploy.yaml"
+      - "services/{{SERVICE_NAME}}/**"
+      - ".github/workflows/{{SERVICE_NAME}}-service-pull-request.yaml"
+      - ".github/workflows/{{SERVICE_NAME}}-service-deploy.yaml"
   workflow_dispatch:
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  SERVICE_NAME: "gateway-service"
-  SERVICE_DIR: "gateway"
+  SERVICE_NAME: "{{SERVICE_NAME}}-service"
+  SERVICE_DIR: "{{SERVICE_NAME}}"
   REGION: asia-northeast1
 
 jobs:

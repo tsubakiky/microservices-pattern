@@ -1,4 +1,4 @@
-name: "catalog service Pull Request Check"
+name: "Pull Request Check catalog service"
 
 on:
   push:
