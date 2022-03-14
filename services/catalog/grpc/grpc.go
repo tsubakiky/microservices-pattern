@@ -14,6 +14,8 @@ import (
 	customer "github.com/Nulandmori/micorservices-pattern/services/customer/proto"
 	item "github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
+	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
@@ -26,9 +28,12 @@ const (
 )
 
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
+	intercepterOpt := otelgrpc.WithTracerProvider(otel.GetTracerProvider())
+
 	opts := []grpc.DialOption{
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor(intercepterOpt)),
 	}
 
 	itemServiceAddr := env.MustGetEnv("ITEM_SERVICE_ADDR")
