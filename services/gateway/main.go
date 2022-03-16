@@ -8,6 +8,7 @@ import (
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	"github.com/Nulandmori/micorservices-pattern/pkg/logger"
 	"github.com/Nulandmori/micorservices-pattern/pkg/run"
+	"github.com/Nulandmori/micorservices-pattern/pkg/trace"
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/grpc"
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/http"
 )
@@ -21,6 +22,12 @@ func server(ctx context.Context) int {
 	grpcPort := 9090
 	defaultPort := 8080
 	httpPort := env.GetPort(defaultPort)
+
+	shutdownTracer, err := trace.InitTraceProvider(ctx)
+	if err != nil {
+		panic(err)
+	}
+	defer shutdownTracer()
 
 	l, err := logger.New()
 	if err != nil {

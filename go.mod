@@ -74,5 +74,6 @@ require (
 	cloud.google.com/go/iam v0.1.1 // indirect
 	github.com/GoogleCloudPlatform/cloudsql-proxy v1.28.0
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.29.0
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.4.1
 	google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.1.0
 )

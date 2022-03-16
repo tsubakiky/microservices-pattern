@@ -15,7 +15,6 @@ import (
 	item "github.com/Nulandmori/micorservices-pattern/services/item/proto"
 	"github.com/go-logr/logr"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
-	"go.opentelemetry.io/otel"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
@@ -28,12 +27,9 @@ const (
 )
 
 func RunServer(ctx context.Context, port int, logger logr.Logger) error {
-	intercepterOpt := otelgrpc.WithTracerProvider(otel.GetTracerProvider())
-
 	opts := []grpc.DialOption{
 		grpc.WithBlock(),
 		grpc.WithDefaultCallOptions(grpc.WaitForReady(true)),
-		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor(intercepterOpt)),
 	}
 
 	itemServiceAddr := env.MustGetEnv("ITEM_SERVICE_ADDR")
@@ -52,8 +48,10 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	iopts := append(append([]grpc.DialOption{}, opts...), grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(iaudience)))
-	copts := append(append([]grpc.DialOption{}, opts...), grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)))
+	iopts := append(append([]grpc.DialOption{
+		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(iaudience))}, opts...), grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()))
+	copts := append(append([]grpc.DialOption{
+		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience))}, opts...), grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()))
 
 	iconn, err := grpc.DialContext(ctx, itemServiceAddr, iopts...)
 	if err != nil {

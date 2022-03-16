@@ -8,6 +8,7 @@ import (
 
 	"github.com/Nulandmori/micorservices-pattern/pkg/env"
 	"github.com/Nulandmori/micorservices-pattern/pkg/logger"
+	"github.com/Nulandmori/micorservices-pattern/pkg/trace"
 	"github.com/Nulandmori/micorservices-pattern/services/catalog/grpc"
 	"golang.org/x/sys/unix"
 )
@@ -22,6 +23,12 @@ func run(ctx context.Context) int {
 
 	ctx, stop := signal.NotifyContext(ctx, unix.SIGTERM, unix.SIGINT)
 	defer stop()
+
+	shutdownTracer, err := trace.InitTraceProvider(ctx)
+	if err != nil {
+		panic(err)
+	}
+	defer shutdownTracer()
 
 	l, err := logger.New()
 	if err != nil {

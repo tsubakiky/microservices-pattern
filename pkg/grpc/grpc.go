@@ -31,13 +31,10 @@ type Server struct {
 }
 
 func NewServer(port int, logger logr.Logger, register func(server *grpc.Server)) *Server {
-	initTraceProvider(logger)
-
-	intercepterOpt := otelgrpc.WithTracerProvider(otel.GetTracerProvider())
 	interceptors := []grpc.UnaryServerInterceptor{
 		interceptor.NewRequestLogger(logger.WithName("request")),
 		grpc_auth.UnaryServerInterceptor(defaultNOPAuthFunc),
-		otelgrpc.UnaryServerInterceptor(intercepterOpt),
+		otelgrpc.UnaryServerInterceptor(),
 	}
 
 	opts := []grpc.ServerOption{
