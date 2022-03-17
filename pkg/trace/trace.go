@@ -12,7 +12,7 @@ import (
 )
 
 func InitTraceProvider(ctx context.Context) (func(), error) {
-	projectID := env.GetEnv("GOOGLE_CLOUD_PROJECT", "gaudiy-integration-test")
+	projectID := env.MustGetEnv("GOOGLE_CLOUD_PROJECT")
 	if len(projectID) == 0 {
 		return nil, fmt.Errorf("GOOGLE_CLOUD_PROJECT not set")
 	}
