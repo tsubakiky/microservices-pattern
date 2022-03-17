@@ -40,8 +40,11 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	copts := append(append([]grpc.DialOption{
-		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience))}, opts...), grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()))
+	copts := []grpc.DialOption{
+		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+	}
+	copts = append(copts, opts...)
 
 	cconn, err := grpc.DialContext(ctx, catalogServiceAddr, copts...)
 	if err != nil {
