@@ -13,6 +13,7 @@ import (
 	catalog "github.com/Nulandmori/micorservices-pattern/services/catalog/proto"
 	"github.com/Nulandmori/micorservices-pattern/services/gateway/proto"
 	"github.com/go-logr/logr"
+	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -39,7 +40,11 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	copts := append(append([]grpc.DialOption{}, opts...), grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)))
+	copts := []grpc.DialOption{
+		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)),
+		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+	}
+	copts = append(copts, opts...)
 
 	cconn, err := grpc.DialContext(ctx, catalogServiceAddr, copts...)
 	if err != nil {

@@ -10,6 +10,8 @@ services:
       context: .
       dockerfile: ./services/customer/Dockerfile
       target: builder
+    env_file:
+      - .env
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
     command: >
@@ -30,6 +32,8 @@ services:
       context: .
       dockerfile: ./services/gateway/Dockerfile
       target: builder
+    env_file:
+      - .env
     environment:
       - CATALOG_SERVICE_ADDR=catalog_service:8080
       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
@@ -51,6 +55,8 @@ services:
       context: .
       dockerfile: ./services/catalog/Dockerfile
       target: builder
+    env_file:
+      - .env
     environment:
       - ITEM_SERVICE_ADDR=item_service:8080
       - CUSTOMER_SERVICE_ADDR=customer_service:8080
@@ -74,6 +80,7 @@ services:
       dockerfile: ./services/item/Dockerfile
       target: builder
     env_file:
+      - .env
       - ./item-variables.env
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS}
