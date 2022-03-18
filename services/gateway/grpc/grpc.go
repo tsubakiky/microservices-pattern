@@ -41,9 +41,12 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 	}
 
 	copts := []grpc.DialOption{
-		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)),
-		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+		grpc.WithChainUnaryInterceptor(
+			otelgrpc.UnaryClientInterceptor(),
+			interceptor.AuthServiceUnnaryClientInterceptor(caudience),
+		),
 	}
+
 	copts = append(copts, opts...)
 
 	cconn, err := grpc.DialContext(ctx, catalogServiceAddr, copts...)
