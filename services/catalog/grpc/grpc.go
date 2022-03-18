@@ -49,14 +49,18 @@ func RunServer(ctx context.Context, port int, logger logr.Logger) error {
 	}
 
 	iopts := []grpc.DialOption{
-		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(iaudience)),
-		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+		grpc.WithChainUnaryInterceptor(
+			otelgrpc.UnaryClientInterceptor(),
+			interceptor.AuthServiceUnnaryClientInterceptor(iaudience),
+		),
 	}
 	iopts = append(iopts, opts...)
 
 	copts := []grpc.DialOption{
-		grpc.WithUnaryInterceptor(interceptor.AuthServiceUnnaryClientInterceptor(caudience)),
-		grpc.WithUnaryInterceptor(otelgrpc.UnaryClientInterceptor()),
+		grpc.WithChainUnaryInterceptor(
+			otelgrpc.UnaryClientInterceptor(),
+			interceptor.AuthServiceUnnaryClientInterceptor(caudience),
+		),
 	}
 	copts = append(copts, opts...)
 
