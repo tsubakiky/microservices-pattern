@@ -15,3 +15,4 @@
 - Firebase Authentication
 - Logging (go-logr)
 - Terraform
+- ent
