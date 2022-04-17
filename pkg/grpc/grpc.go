@@ -27,7 +27,6 @@ func NewServer(port int, logger logr.Logger, register func(server *grpc.Server))
 	interceptors := []grpc.UnaryServerInterceptor{
 		interceptor.NewRequestLogger(logger.WithName("request")),
 		grpc_auth.UnaryServerInterceptor(defaultNOPAuthFunc),
-		// otelgrpc.UnaryServerInterceptor(),
 	}
 
 	opts := []grpc.ServerOption{
